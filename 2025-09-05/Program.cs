@@ -15,16 +15,13 @@ class Program
         var frac1 = ParseMixedFraction(args[0]);
         var frac2 = ParseMixedFraction(args[1]);
 
-        // Brüche addieren
         int numerator = frac1.Item1 * frac2.Item2 + frac2.Item1 * frac1.Item2;
         int denominator = frac1.Item2 * frac2.Item2;
 
-        // Kürzen
         int gcd = GCD(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 
-        // Gemischten Bruch darstellen
         int whole = numerator / denominator;
         int restNum = numerator % denominator;
 
@@ -36,7 +33,6 @@ class Program
             Console.WriteLine($"{whole} {restNum}/{denominator}");
     }
 
-    // Parser für gemischten Bruch wie "2 3/8" oder nur "3/4" oder nur "5"
     static Tuple<int, int> ParseMixedFraction(string input)
     {
         var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -64,7 +60,6 @@ class Program
             }
         }
 
-        // Alles als unechten Bruch zurückgeben
         return Tuple.Create(whole * den + num, den);
     }
 
