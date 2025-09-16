@@ -1,69 +1,105 @@
-﻿
-using System;
-using System.Linq;
+﻿using System;
 
 class Program
 {
     static void Main(string[] args)
     {
-        if (args.Length != 2)
+        try
         {
-            Console.WriteLine("Benutzung: dotnet run \"2 3/8\" \"1 5/6\"");
-            return;
+            if (args.Length != 2)
+            {
+                throw new ArgumentException("Bitte genau 2 Brüche angeben, z.B.: dotnet run \"2 3/8\" \"1 5/6\"");
+            }
+
+            Fraction f1 = Fraction.Parse(args[0]);
+            Fraction f2 = Fraction.Parse(args[1]);
+
+            Fraction sum = f1 + f2;
+
+            Console.WriteLine(sum.ToMixedString());
         }
-
-        var frac1 = ParseMixedFraction(args[0]);
-        var frac2 = ParseMixedFraction(args[1]);
-
-        int numerator = frac1.Item1 * frac2.Item2 + frac2.Item1 * frac1.Item2;
-        int denominator = frac1.Item2 * frac2.Item2;
-
-        int gcd = GCD(numerator, denominator);
-        numerator /= gcd;
-        denominator /= gcd;
-
-        int whole = numerator / denominator;
-        int restNum = numerator % denominator;
-
-        if (restNum == 0)
-            Console.WriteLine(whole);
-        else if (whole == 0)
-            Console.WriteLine($"{restNum}/{denominator}");
-        else
-            Console.WriteLine($"{whole} {restNum}/{denominator}");
+        catch (FormatException ex)
+        {
+            Console.WriteLine("Fehler im Eingabeformat: " + ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine("Ungültiges Argument: " + ex.Message);
+        }
+        catch (Exception ex)
+        {
+            // Fängt alle nicht spezifizierten Fehler ab
+            Console.WriteLine("Ein unbekannter Fehler ist aufgetreten: " + ex.Message);
+        }
     }
+}
 
-    static Tuple<int, int> ParseMixedFraction(string input)
+public class Fraction
+{
+    public int Numerator { get; set; }
+    public int Denominator { get; set; }
+
+    public Fraction(int numerator, int denominator)
     {
-        var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (denominator == 0)
+            throw new ArgumentException("Nenner darf nicht 0 sein.");
 
-        int whole = 0, num = 0, den = 1;
-
-        if (parts.Length == 2)
-        {
-            whole = int.Parse(parts[0]);
-            var fracParts = parts[1].Split('/');
-            num = int.Parse(fracParts[0]);
-            den = int.Parse(fracParts[1]);
-        }
-        else if (parts.Length == 1)
-        {
-            if (parts[0].Contains('/'))
-            {
-                var fracParts = parts[0].Split('/');
-                num = int.Parse(fracParts[0]);
-                den = int.Parse(fracParts[1]);
-            }
-            else
-            {
-                whole = int.Parse(parts[0]);
-            }
-        }
-
-        return Tuple.Create(whole * den + num, den);
+        Numerator = numerator;
+        Denominator = denominator;
+        Simplify();
     }
 
-    static int GCD(int a, int b)
+    public static Fraction Parse(string input)
+    {
+        string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 2) // gemischter Bruch
+        {
+            int whole = int.Parse(parts[0]);
+            string[] frac = parts[1].Split('/');
+            if (frac.Length != 2)
+                throw new FormatException("Gemischter Bruch muss im Format 'a b/c' sein.");
+            int num = int.Parse(frac[0]);
+            int den = int.Parse(frac[1]);
+            return new Fraction(whole * den + num, den);
+        }
+        else if (parts.Length == 1 && parts[0].Contains("/")) // echter Bruch
+        {
+            string[] frac = parts[0].Split('/');
+            if (frac.Length != 2)
+                throw new FormatException("Bruch muss im Format 'a/b' sein.");
+            return new Fraction(int.Parse(frac[0]), int.Parse(frac[1]));
+        }
+        else if (parts.Length == 1) // ganze Zahl
+        {
+            return new Fraction(int.Parse(parts[0]), 1);
+        }
+        else
+        {
+            throw new FormatException("Ungültiges Eingabeformat.");
+        }
+    }
+
+    public static Fraction operator +(Fraction a, Fraction b)
+    {
+        int numerator = a.Numerator * b.Denominator + b.Numerator * a.Denominator;
+        int denominator = a.Denominator * b.Denominator;
+        return new Fraction(numerator, denominator);
+    }
+
+    public void Simplify()
+    {
+        int g = GCD(Math.Abs(Numerator), Math.Abs(Denominator));
+        Numerator /= g;
+        Denominator /= g;
+        if (Denominator < 0)
+        {
+            Numerator = -Numerator;
+            Denominator = -Denominator;
+        }
+    }
+
+    private int GCD(int a, int b)
     {
         while (b != 0)
         {
@@ -71,6 +107,16 @@ class Program
             b = a % b;
             a = t;
         }
-        return Math.Abs(a);
+        return a;
+    }
+
+    public string ToMixedString()
+    {
+        int whole = Numerator / Denominator;
+        int remainder = Math.Abs(Numerator % Denominator);
+
+        if (remainder == 0) return whole.ToString();
+        if (whole == 0) return $"{remainder}/{Denominator}";
+        return $"{whole} {remainder}/{Denominator}";
     }
 }

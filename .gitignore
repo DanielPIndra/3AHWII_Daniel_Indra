@@ -1,0 +1,13 @@
+2025-09-05/*
+!2025-09-05/Program.cs
+bin/
+obj/
+*.user
+*.suo
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+.vscode/
+2025-09-05.Tests/
