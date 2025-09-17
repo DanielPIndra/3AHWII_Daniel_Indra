@@ -63,17 +63,17 @@ public class Fraction
             int den = int.Parse(frac[1]);
             return new Fraction(whole * den + num, den);
         }
-        else if (parts.Length == 1 && parts[0].Contains("/")) // echter Bruch
+        else if (parts.Length == 1 && parts[0].Contains("/")) 
         {
             string[] frac = parts[0].Split('/');
             if (frac.Length != 2)
                 throw new FormatException("Bruch muss im Format 'a/b' sein.");
             return new Fraction(int.Parse(frac[0]), int.Parse(frac[1]));
         }
-        else if (parts.Length == 1) // ganze Zahl
+        else if (parts.Length == 1)
         {
             return new Fraction(int.Parse(parts[0]), 1);
-        }
+        
         else
         {
             throw new FormatException("Ungültiges Eingabeformat.");
