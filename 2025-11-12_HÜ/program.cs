@@ -9,6 +9,8 @@ class Program
         {
             Console.WriteLine(s);
         }
+        // Setze hier einen Breakpoint (klicke links neben die Zeilennummer):
+        // -> Breakpoint sinnvoll direkt vor der ersten Bruch-Erzeugung
         Bruch b1 = new Bruch(args[0]);
         Bruch b2 = new Bruch(args[1]);
         Bruch b3 = b1.addiere(b2);

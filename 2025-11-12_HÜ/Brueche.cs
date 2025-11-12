@@ -1,77 +1,91 @@
 class Bruch
 {
-    // jetzt kommen die sog. "Attribute" der Klasse oder "Felder"
-    private int ganz;
-    private int zaehler;
-    private int nenner;
+    private int ganz, zaehler, nenner;
 
     public Bruch(string bruchtext)
     {
-        string[] teile1 = bruchtext.Split(' ');
-        this.ganz = int.Parse(teile1[0]);
-        string[] teile = teile1[1].Split('/');
-        this.zaehler = int.Parse(teile[0]);
-        this.nenner = int.Parse(teile[1]);
+        if (string.IsNullOrWhiteSpace(bruchtext)) throw new FormatException("Leerer Bruch-String");
+
+        // Wenn ein Debugger angehängt ist, kurz anhalten, so dass wir direkt in Brueche.cs debuggen können
+        if (System.Diagnostics.Debugger.IsAttached)
+        {
+            System.Diagnostics.Debugger.Break();
+        }
+
+        string[] parts = bruchtext.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 2 && parts[1].Contains('/'))
+        {
+            int g = int.Parse(parts[0]);
+            string[] frac = parts[1].Split('/');
+            FromImproper(g * int.Parse(frac[1]) + Math.Sign(g) * int.Parse(frac[0]), int.Parse(frac[1]));
+        }
+        else if (parts.Length == 1 && parts[0].Contains('/'))
+        {
+            string[] frac = parts[0].Split('/');
+            FromImproper(int.Parse(frac[0]), int.Parse(frac[1]));
+        }
+        else if (parts.Length == 1)
+        {
+            ganz = int.Parse(parts[0]);
+            zaehler = 0;
+            nenner = 1;
+        }
+        else throw new FormatException("Ungültiges Eingabeformat für Bruch");
     }
 
     public Bruch(int ganz, int zaehler, int nenner)
     {
+        if (nenner == 0) throw new ArgumentException("Nenner darf nicht 0 sein.");
         this.ganz = ganz;
-        this.zaehler = zaehler;
+        this.zaehler = Math.Abs(zaehler);
         this.nenner = nenner;
+        Normalize();
+    }
+
+    // Konstruktor für unechten Bruch (Zähler/Nenner)
+    public Bruch(int numerator, int denominator, bool fromImproper)
+    {
+        if (denominator == 0) throw new ArgumentException("Nenner darf nicht 0 sein.");
+        FromImproper(numerator, denominator);
     }
 
     public Bruch addiere(Bruch b)
     {
-        // Umwandeln in unechte Brüche
-        int n1 = this.ganz * this.nenner + this.zaehler;
-        int d1 = this.nenner;
-
-        int n2 = b.ganz * b.nenner + b.zaehler;
-        int d2 = b.nenner;
-
-        // gemeinsamen Nenner bilden und Zähler addieren
-        int numerator = n1 * d2 + n2 * d1;
-        int denominator = d1 * d2;
-
-        // kürzen
-        int g = GCD(Math.Abs(numerator), Math.Abs(denominator));
-        if (g != 0)
-        {
-            numerator /= g;
-            denominator /= g;
-        }
-
-        // gemischten Bruch bilden
-        int resultGanz = numerator / denominator;
-        int resultZaehler = Math.Abs(numerator % denominator);
-        int resultNenner = denominator;
-
-        return new Bruch(resultGanz, resultZaehler, resultNenner);
+        int n1 = ToImproperNumerator(), n2 = b.ToImproperNumerator();
+        int d1 = nenner, d2 = b.nenner;
+        return new Bruch(n1 * d2 + n2 * d1, d1 * d2, true);
     }
 
-    private int GCD(int a, int b)
+    private int GCD(int a, int b) => (a == 0) ? b : (b == 0) ? a : GCD(b, a % b);
+
+    public override string ToString() => toString();
+
+    private int ToImproperNumerator() => ganz * nenner + (ganz < 0 ? -zaehler : zaehler);
+
+    private void FromImproper(int num, int den)
     {
-        if (a == 0) return b;
-        if (b == 0) return a;
-        while (b != 0)
-        {
-            int t = b;
-            b = a % b;
-            a = t;
-        }
-        return a;
+        int g = GCD(Math.Abs(num), Math.Abs(den));
+        num /= g; den /= g;
+        if (den < 0) { den = -den; num = -num; }
+        ganz = num / den;
+        zaehler = Math.Abs(num % den);
+        nenner = den;
+    }
+
+    private void Normalize()
+    {
+        if (nenner == 0) throw new ArgumentException("Nenner darf nicht 0 sein.");
+        int num = ToImproperNumerator(), g = GCD(Math.Abs(num), Math.Abs(nenner));
+        num /= g;
+        nenner = nenner < 0 ? -nenner : nenner;
+        ganz = num / nenner;
+        zaehler = Math.Abs(num % nenner);
     }
 
     public string toString()
     {
-        return $"ich bin ein bruch: {this.zaehler}/{this.nenner}";
-        // JS: return `ich bin ein bruch: ${this.zaehler}/${this.nenner}`;
-    }
-
-    // kompatibler ToString-override (C# Konvention) – ruft die vorhandene Methode auf
-    public override string ToString()
-    {
-        return toString();
+        if (zaehler == 0) return ganz.ToString();
+        if (ganz == 0) return $"{zaehler}/{nenner}";
+        return $"{ganz} {zaehler}/{nenner}";
     }
 }
