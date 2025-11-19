@@ -1,16 +1,10 @@
-class Bruch
+public class Bruch
 {
     private int ganz, zaehler, nenner;
 
     public Bruch(string bruchtext)
     {
         if (string.IsNullOrWhiteSpace(bruchtext)) throw new FormatException("Leerer Bruch-String");
-
-        // Wenn ein Debugger angehängt ist, kurz anhalten, so dass wir direkt in Brueche.cs debuggen können
-        if (System.Diagnostics.Debugger.IsAttached)
-        {
-            System.Diagnostics.Debugger.Break();
-        }
 
         string[] parts = bruchtext.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length == 2 && parts[1].Contains('/'))
