@@ -1,0 +1,15 @@
+llama - Einfache Installation, lädt Modelle herunter, Chat-Interface
+LM Studio - Desktop-App mit GUI, Modell-Browser, VRAM-Anpassung
+GPT4All - Benutzerfreundlich, viele Modelle, offline
+Llama.cpp - Schnell, minimalistisch, für C++ Entwickler
+Text Generation WebUI - Umfangreiche GUI, viele Features
+Jan - ChatGPT-ähnliche Oberfläche, lokal
+Hugging Face Spaces - Manche Modelle kostenlos hosten
+
+Groq - API kostenlos für bestimmte Kontingente, sehr schnell
+Together.ai - $0,50-$2 pro Million Tokens
+Replicate - Pay-as-you-go, ab ~$0,001 pro Prediction
+Hugging Face Inference API - $9-99/Monat
+Runwey - Serverless Inference, flexible Abrechnung
+Modal - GPU Zugang, nach Nutzung abgerechnet (~$0,00010/GPU Sekunde)
+Mistral AI - $0,14-$0,42 pro Million Tokens
