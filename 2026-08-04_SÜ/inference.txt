@@ -13,3 +13,16 @@ Hugging Face Inference API - $9-99/Monat
 Runwey - Serverless Inference, flexible Abrechnung
 Modal - GPU Zugang, nach Nutzung abgerechnet (~$0,00010/GPU Sekunde)
 Mistral AI - $0,14-$0,42 pro Million Tokens
+
+
+Inference bedeutet: Ein trainiertes Modell wird benutzt, um aus neuen Eingaben eine Ausgabe/Vorhersage zu machen.
+
+Kurz gesagt:
+
+Training: Modell lernt aus Daten.
+Inference: Modell wird angewendet.
+Beispiel bei KI-Chat:
+Du gibst eine Frage ein und das Modell erzeugt die Antwort, das ist Inference.
+
+Beispiel Bild-KI:
+Du gibst einen Prompt ein und das Modell erzeugt ein Bild, das ist ebenfalls Inference.
