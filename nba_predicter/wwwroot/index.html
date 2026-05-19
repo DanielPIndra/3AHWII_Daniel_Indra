@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NBA Playoff Predictor</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">NBA Playoff Predictor</p>
+          <h1>Playoff-Matchups nach Team-Offense und Team-Defense bewertet</h1>
+        </div>
+        <div class="weight-card">
+          <span><strong id="offense-weight">55</strong>% Offense</span>
+          <span><strong id="defense-weight">45</strong>% Defense</span>
+        </div>
+      </section>
+
+      <section class="summary-strip">
+        <div>
+          <span>Saison</span>
+          <strong id="season">Lade...</strong>
+        </div>
+        <div>
+          <span>Datenquelle</span>
+          <strong id="source">NBA Stats</strong>
+        </div>
+        <div>
+          <span>Modell</span>
+          <strong>Advanced Stats pro 100 Possessions</strong>
+        </div>
+      </section>
+
+      <section class="section-heading compact-heading">
+        <div>
+          <p class="eyebrow">Conference Standings</p>
+          <h2>Tabellen</h2>
+        </div>
+        <div class="conference-switch" role="group" aria-label="Conference Tabelle auswählen">
+          <button class="conference-button active" type="button" data-conference="Eastern Conference">Eastern</button>
+          <button class="conference-button" type="button" data-conference="Western Conference">Western</button>
+        </div>
+      </section>
+      <section class="standings-card">
+        <div id="standings" class="standings-table" aria-live="polite"></div>
+      </section>
+
+      <section class="section-heading">
+        <div>
+          <p class="eyebrow">Upcoming Playoff Games</p>
+          <h2>Bevorstehende Spiele und Win-Ratios</h2>
+        </div>
+      </section>
+      <section id="games" class="games" aria-live="polite"></section>
+
+      <section class="section-heading">
+        <div>
+          <p class="eyebrow">Playoff Picture</p>
+          <h2>Serien-Ratings</h2>
+        </div>
+      </section>
+      <section id="matchups" class="matchups" aria-live="polite"></section>
+    </main>
+
+    <template id="matchup-template">
+      <article class="matchup-card">
+        <header class="matchup-header">
+          <div>
+            <p class="conference"></p>
+            <h2></h2>
+          </div>
+          <div class="favorite">
+            <span>Favorit</span>
+            <strong></strong>
+          </div>
+        </header>
+        <div class="team-grid"></div>
+        <div class="meter"><span></span></div>
+      </article>
+    </template>
+
+    <template id="game-template">
+      <article class="game-card">
+        <header class="game-header">
+          <div>
+            <p class="conference"></p>
+            <h3></h3>
+          </div>
+          <div class="favorite">
+            <span>Favorit</span>
+            <strong></strong>
+          </div>
+        </header>
+        <div class="ratio-row">
+          <div class="ratio-team home-ratio">
+            <span></span>
+            <strong></strong>
+          </div>
+          <div class="ratio-team away-ratio">
+            <span></span>
+            <strong></strong>
+          </div>
+        </div>
+        <div class="split-meter">
+          <span class="home-fill"></span>
+          <span class="away-fill"></span>
+        </div>
+      </article>
+    </template>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

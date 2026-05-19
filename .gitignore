@@ -12,5 +12,6 @@ obj/
 *.pdb
 *.cache
 *.log
+*.db
 .vscode/
 2025-09-05.Tests/
